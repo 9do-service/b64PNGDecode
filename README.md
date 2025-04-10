@@ -1,6 +1,7 @@
 # QR Code base64 字串解碼
 本項目希望利用程式自動化工作流程，快速處理公司內待處理的 QR Code ，以達到客戶端可以快速認證、傳遞與交換資料，透過程式自動化處理 QR Code 的方法，將 QR Code 內容彙整成單一的代辦工作清單，改善工作效率不佳的問題。資訊散布在許多不同的地方已成常態，提升效率的方法就是能快速將分散於各處的資訊進行彙整、分析與處理，各種 API 自動串接讓人力資源短缺的環境下，工作流程更流暢，自動處理例行工作瑣事也成為當今許多經營者首要的任務，讀取各網站自動生成 QR Code 的內容，以便進行下一個動作，最理想的做法是只要決策確認後，系統就能自動處理進行掃碼授權或者是掃碼繳費，完成接下來的所有工作，省去繁複的作業。
-![image]([https://github.com/9do-service/](https://github.com/9do-service/b64PNGDecode/blob/main/demo.png))
+
+![image](https://github.com/9do-service/b64PNGDecode/blob/main/demo.png)
 
 開發環境，平台 Windows
 
