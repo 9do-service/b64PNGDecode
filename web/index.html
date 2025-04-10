@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Base64 字串產生器</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        input[type="text"], textarea { width: 90%; max-width: 500px; margin-bottom: 10px; padding: 8px; }
+        button { padding: 10px 15px; cursor: pointer; }
+        textarea { height: 150px; font-family: monospace; word-wrap: break-word; }
+        /* 隱藏用於渲染的容器 */
+        #qrcode-hidden-renderer {
+            display: none;
+            /* position: absolute; */
+            /* top: -9999px; */
+            /* left: -9999px; */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>QR Code Base64 字串產生器</h1>
+
+    <label for="qr-text">Text to Encode:</label><br>
+    <input type="text" id="qr-text" value="https://an9le.com/">
+    <br>
+
+    <button onclick="generateQrBase64()">產生 Base64 字串</button>
+    <div id="qrcode-hidden-renderer"></div>
+
+    <h2>Generated Base64 PNG String:</h2>
+    <textarea id="base64-output" readonly placeholder="Base64 字串產生在這裡..."></textarea>
+	<br>
+	
+	<button onclick="qrBase64Decoder()">將文字輸入框的資料解碼(測試版隨機加入 *)</button>
+	<div id="result"></div>
+	
+    <script type="text/javascript" src="qrcode.min.js"></script>
+    <script type="text/javascript" src="eel.js"></script>
+	<script type="text/javascript">
+		function generateQrBase64() {
+            const textToEncode = document.getElementById('qr-text').value;
+            const outputTextarea = document.getElementById('base64-output');
+            const rendererDiv = document.getElementById('qrcode-hidden-renderer');
+
+            rendererDiv.innerHTML = '';
+            outputTextarea.value = ''; 
+
+            if (!textToEncode) {
+                alert("Please enter text to encode.");
+                return;
+            }
+
+            try {
+                const qrcode = new QRCode(rendererDiv, {
+                    text: textToEncode,
+                    width: 256, // QR Code 寬度 (像素)
+                    height: 256, // QR Code 高度 (像素)
+                    colorDark: "#000000", // 深色模組顏色
+                    colorLight: "#ffffff", // 淺色背景顏色
+                    correctLevel: QRCode.CorrectLevel.H // 錯誤校正等級 (L, M, Q, H)
+                });
+
+                const canvasElement = rendererDiv.querySelector("canvas");
+                const imgElement = rendererDiv.querySelector("img");
+
+                if (canvasElement) {
+                    const base64String = canvasElement.toDataURL("image/png");
+                    outputTextarea.value = base64String;
+
+                } else if (imgElement && imgElement.src.startsWith('data:image/png;base64,')) {
+                    outputTextarea.value = imgElement.src;
+                } else {
+                    outputTextarea.value = "錯誤: 無法產生字串";
+                }
+
+            } catch (error) {
+                outputTextarea.value = "Error: " + error.message;
+                alert("無法產生 QR Code: " + error.message);
+            }
+        }
+		
+		function qrBase64Decoder()
+		{
+			const outputTextarea = document.getElementById('base64-output');
+			var param = {"base64Str":outputTextarea.value};
+			eel.qrBase64Decoder(param)().then(function (jsonObj) { 
+				const rendererDiv = document.getElementById('result');
+				if(jsonObj['code'] == '00')
+				{
+					rendererDiv.innerHTML = jsonObj['rlt'];
+				}
+				else
+				{
+					rendererDiv.innerHTML = '解碼錯誤';
+					//顯示錯誤訊息
+					//TODO:
+				}
+			});
+		}
+    </script>
+
+</body>
+</html>
